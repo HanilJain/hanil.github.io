@@ -1,0 +1,1533 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── RESET & BASE ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --black:   #000000;
+  --red:     #ff2200;
+  --red-dim: #cc1a00;
+  --white:   #ffffff;
+  --off-white: #e8e8e8;
+  --gray:    #1a1a1a;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+
+  /* shadcn tokens — kept for component compatibility */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --radius: 0.5rem;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent all scrollbars on root */
+#root {
+  position: fixed;
+  inset: 0;
+}
+
+/* ─── LOADING SCREEN ─────────────────────────────────────────────────────────── */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+  gap: 0;
+}
+
+.loading-name {
+  position: absolute;
+  top: 2rem;
+  left: 2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.25em;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  margin-bottom: 3rem;
+}
+
+.loading-label {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 7rem);
+  letter-spacing: 0.3em;
+  color: var(--white);
+  opacity: 0.08;
+  user-select: none;
+}
+
+/* Progress bar */
+.progress-track {
+  width: clamp(240px, 40vw, 520px);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--red);
+  box-shadow: 0 0 12px var(--red);
+}
+
+.progress-number {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 14vw, 10rem);
+  letter-spacing: -0.02em;
+  color: var(--white);
+  line-height: 1;
+  text-align: center;
+  min-width: 4ch;
+}
+
+/* Picky lines */
+.loading-picky {
+  position: absolute;
+  bottom: 7rem;
+  text-align: center;
+  height: 2rem;
+  overflow: hidden;
+}
+
+.picky-line {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Sound notice */
+.sound-notice {
+  position: absolute;
+  bottom: 4.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ENTER + SKIP button group — same row, same size */
+.loading-cta-group {
+  position: absolute;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+/* ENTER button */
+.enter-btn {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+  letter-spacing: 0.45em;
+  padding: 0 2.8rem;
+  min-height: 3.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  animation: pulse-red 2s ease-in-out infinite;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.enter-btn:hover {
+  background: var(--red);
+  color: var(--black);
+  box-shadow: 0 0 40px rgba(255, 34, 0, 0.4);
+  animation: none;
+}
+
+/* SKIP button — secondary, terminal-mono style, same height as ENTER */
+.skip-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.58rem, 1.4vw, 0.68rem);
+  letter-spacing: 0.22em;
+  padding: 0 2.8rem;
+  min-height: 3.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.skip-btn:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 34, 0, 0.3); }
+  50%       { box-shadow: 0 0 28px rgba(255, 34, 0, 0.65); }
+}
+
+/* Scanlines */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.12) 3px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+  z-index: 1;
+}
+
+/* ─── HOME PAGE ─────────────────────────────────────────────────────────────── */
+/* Fixed root — provides dark base; Canvas sits at z-index 1 behind HTML        */
+.home-page {
+  position: fixed;
+  inset: 0;
+  background: #0f0507; /* slightly warmer dark for better contrast */
+}
+
+/* HTML content wrapper — fades in via Framer Motion; transparent so Canvas shows */
+.home-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+}
+
+/* Scroll container — transparent, captures scroll events over the Canvas         */
+.home-scroll-overlay {
+  position: absolute;
+  inset: 0;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background: transparent;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.home-scroll-overlay::-webkit-scrollbar { display: none; }
+
+/* ─── SECTION 1 — HERO ───────────────────────────────────────────────────────── */
+.home-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  /* Transparent base — Canvas at z-index 1 shows through.
+     Radial glows give cinematic warmth without blocking the Canvas. */
+  background:
+    radial-gradient(ellipse 55% 80% at 68% 52%, rgba(90, 14, 4, 0.38) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 60% at 18% 45%, rgba(8, 8, 18, 0.5) 0%, transparent 60%);
+}
+
+/* Very subtle red grid behind avatar area */
+.home-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 30, 0, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 30, 0, 0.022) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Letterbox bars */
+.letterbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 5.5vh;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.letterbox-top    { top: 0;    background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.8) 100%); }
+.letterbox-bottom { bottom: 0; background: linear-gradient(to top,   #000 0%, rgba(0,0,0,0.8) 100%); }
+
+/* ── Split grid ── */
+.home-split {
+  /* Full viewport height — letterbox bands removed, text centered in full 100vh */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 44fr 56fr;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .home-split { grid-template-columns: 1fr; grid-template-rows: 44fr 56fr; }
+}
+
+/* ── Left text column ── */
+.home-text-side {
+  /* fill the full grid-row height so justify-content: center works */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2rem 0 4.5rem;
+  z-index: 20;
+  position: relative;
+  /* Dark gradient so text stays readable over the Canvas behind */
+  background: linear-gradient(
+    to right,
+    rgba(10, 2, 4, 0.98) 0%,
+    rgba(10, 2, 4, 0.95) 65%,
+    rgba(10, 2, 4, 0) 100%
+  );
+}
+
+@media (max-width: 1024px) { .home-text-side { padding: 0 1.5rem 0 2.5rem; } }
+@media (max-width: 768px)  {
+  .home-text-side { padding: 2rem 1.5rem 1rem; justify-content: flex-end; }
+}
+
+.hero-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06em;
+}
+
+.hero-line {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5.6vw, 7rem);
+  letter-spacing: 0.03em;
+  line-height: 0.92;
+  color: var(--red);
+  text-shadow:
+    0 0 120px rgba(255, 34, 0, 0.28),
+    0 0 40px  rgba(255, 34, 0, 0.14),
+    0 2px 6px rgba(0, 0, 0, 0.95);
+}
+
+@media (max-width: 768px) { .hero-line { font-size: clamp(2.4rem, 9.5vw, 4rem); } }
+
+/* Scroll hint */
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 2.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.38);
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0;
+  transition: color 0.25s;
+}
+
+.scroll-hint:hover { color: rgba(255, 255, 255, 0.82); }
+.scroll-line { width: 26px; height: 1px; background: currentColor; }
+
+/* ── Right canvas column ── */
+.home-canvas-side {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Name stamp */
+.name-stamp {
+  position: absolute;
+  bottom: 6.5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.7em;
+  color: var(--white);
+  white-space: nowrap;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ─── TRANSITION BUFFER — 360° animation theater ─────────────────────────────── */
+/* Full 100vh of empty scroll space so the helical spin plays fully visible.      */
+.home-transition-zone {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  flex-shrink: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* ─── SECTION 2 — THIS IS SHIRSH ─────────────────────────────────────────────── */
+.home-section-2 {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: transparent; /* Canvas shows through */
+}
+
+/* Left-side dark fade — makes text readable over the centered 3D avatar */
+.home-section-2::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 52%;
+  background: linear-gradient(to right, rgba(10, 2, 4, 0.9) 0%, transparent 100%);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* Outer positioner: centers the text block vertically on the left side */
+.this-is-shirsh-positioner {
+  position: absolute;
+  left: clamp(2.5rem, 6vw, 7rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Inner animated block — opacity/translateY driven by scroll listener */
+.this-is-shirsh {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06em;
+}
+
+/* "This is" — white, subdued */
+.this-is-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.95);
+}
+
+/* "Shirsh." — massive red */
+.this-is-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(5.5rem, 14vw, 17rem);
+  letter-spacing: 0.015em;
+  line-height: 0.86;
+  color: var(--red);
+  text-shadow:
+    0 0 160px rgba(255, 34, 0, 0.4),
+    0 0 60px  rgba(255, 34, 0, 0.18),
+    0 4px 14px rgba(0, 0, 0, 0.98);
+}
+
+/* Decorative ambient number */
+.section2-ambient {
+  position: absolute;
+  right: 3rem;
+  bottom: -2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 22vw, 28rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.018);
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  letter-spacing: -0.05em;
+}
+
+/* ─── CANVAS WRAPPERS (crossfade support) ────────────────────────────────────── */
+/* Both canvases are fixed/full-screen; opacity controlled by scroll listener    */
+.canvas-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─── PAGE 3 — I AM AN ENGINEER ─────────────────────────────────────────────── */
+.home-engineer-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+/* Dark left-side gradient so text stays readable over the canvas */
+.home-engineer-page::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 58%;
+  background: linear-gradient(to right, rgba(10, 2, 4, 0.92) 0%, transparent 100%);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* Outer positioner: bottom-left anchoring */
+.engineer-text-positioner {
+  position: absolute;
+  left: clamp(2.5rem, 6vw, 7rem);
+  bottom: clamp(6rem, 12vh, 10rem);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Inner animated block */
+.engineer-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+/* "I AM AN ENGINEER" — big red display text */
+.engineer-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6.5vw, 8.5rem);
+  letter-spacing: 0.03em;
+  line-height: 0.92;
+  color: var(--red);
+  text-shadow:
+    0 0 120px rgba(255, 34, 0, 0.28),
+    0 0 40px  rgba(255, 34, 0, 0.14),
+    0 2px 6px rgba(0, 0, 0, 0.95);
+}
+
+/* "who loves to solve problems." — white Space Grotesk subtitle */
+.engineer-subtitle {
+  display: block;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.04em;
+}
+
+/* Decorative ambient number */
+.section3-ambient {
+  position: absolute;
+  right: 3rem;
+  bottom: -2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 22vw, 28rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.018);
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 768px) {
+  .engineer-text-positioner { left: 1.5rem; bottom: 4rem; }
+  .engineer-title { font-size: clamp(2.2rem, 9vw, 4rem); }
+  .home-engineer-page::before { width: 100%; }
+}
+
+/* ─── CAMERA DROP BUFFER ─────────────────────────────────────────────────────── */
+/* Scroll through this 100vh zone to drive the camera from eye-level to low angle */
+.home-camera-buffer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  flex-shrink: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* ─── PAGE 4 — I AM GONNA STEAL YOUR JOBS ───────────────────────────────────── */
+.home-steal-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+/* Subtle dark veil — deepens the low-angle drama */
+.home-steal-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 2, 4, 0.38);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* Outer positioner: centres the text block on the page */
+.steal-text-positioner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  text-align: center;
+  pointer-events: none;
+  width: 90%;
+}
+
+/* Inner animated block — translateY applied inline by scroll listener */
+.steal-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* "I AM GONNA STEAL YOUR JOBS." — full-width centered red text */
+.steal-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 7rem);
+  letter-spacing: 0.03em;
+  line-height: 0.92;
+  color: var(--red);
+  text-shadow:
+    0 0 160px rgba(255, 34, 0, 0.4),
+    0 0 60px  rgba(255, 34, 0, 0.18),
+    0 4px 14px rgba(0, 0, 0, 0.98);
+}
+
+/* Decorative ambient number */
+.section4-ambient {
+  position: absolute;
+  right: 3rem;
+  bottom: -2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 22vw, 28rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.018);
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 768px) {
+  .steal-title { font-size: clamp(1.8rem, 8vw, 3.5rem); }
+}
+
+/* ── Profile CTA on Page 4 ── */
+.profile-cta-link {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  pointer-events: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.6rem, 1.4vw, 0.75rem);
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.38);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 3px;
+  white-space: nowrap;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.profile-cta-link:hover {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+/* ─── SHADCN COMPATIBILITY ───────────────────────────────────────────────────── */
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+@layer base {
+  [data-debug-wrapper="true"] { display: contents !important; }
+  [data-debug-wrapper="true"] > * {
+    margin: inherit; padding: inherit; gap: inherit;
+    border-left-width: inherit; border-right-width: inherit;
+    border-top-width: inherit; border-bottom-width: inherit;
+    border-left-style: inherit; border-right-style: inherit;
+    border-top-style: inherit; border-bottom-style: inherit;
+    border-left-color: inherit; border-right-color: inherit;
+    border-top-color: inherit; border-bottom-color: inherit;
+  }
+}
+
+/* ─── PROFILE PAGE — CLI TERMINAL ───────────────────────────────────────────── */
+.profile-page {
+  position: fixed;
+  inset: 0;
+  background: #080808;
+  color: #74cb74;
+  font-family: 'JetBrains Mono', monospace;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 34, 0, 0.25) transparent;
+  /* subtle red grid background */
+  background-image:
+    linear-gradient(rgba(218, 55, 37, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(218, 55, 37, 0.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+  filter: contrast(0.92) saturate(0.84);
+}
+
+.profile-page::-webkit-scrollbar { width: 4px; }
+.profile-page::-webkit-scrollbar-track { background: transparent; }
+.profile-page::-webkit-scrollbar-thumb { background: rgba(255, 34, 0, 0.22); border-radius: 2px; }
+
+/* ── Sticky terminal header ── */
+.profile-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0.9rem 2.5rem;
+  background: rgba(5, 5, 5, 0.94);
+  border-bottom: 1px solid rgba(255, 34, 0, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.profile-prompt {
+  color: #ff2200;
+  font-weight: 600;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  letter-spacing: 0.05em;
+}
+
+.profile-prompt-sep {
+  color: rgba(255, 34, 0, 0.45);
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+}
+
+.profile-cmd {
+  color: rgba(127, 255, 127, 0.5);
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+}
+
+.profile-cursor {
+  display: inline-block;
+  color: #7fff7f;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  margin-left: 3px;
+}
+
+.profile-back-btn {
+  margin-left: auto;
+  color: rgba(127, 255, 127, 0.55);
+  text-decoration: none;
+  font-size: clamp(0.6rem, 1.2vw, 0.72rem);
+  letter-spacing: 0.2em;
+  border: 1px solid rgba(127, 255, 127, 0.2);
+  padding: 0.35rem 1.1rem;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+  white-space: nowrap;
+}
+
+.profile-back-btn:hover {
+  background: rgba(127, 255, 127, 0.08);
+  color: #7fff7f;
+  border-color: rgba(127, 255, 127, 0.45);
+}
+
+/* ── Hero identity card ── */
+.profile-hero-card {
+  margin: 2.5rem auto 0;
+  max-width: 860px;
+  padding: 1.8rem 2.5rem;
+  border: 1px solid rgba(255, 34, 0, 0.22);
+  background: rgba(255, 34, 0, 0.035);
+  box-shadow: 0 0 48px rgba(255, 34, 0, 0.08), inset 0 0 48px rgba(255, 34, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 34, 0, 0.7), transparent);
+}
+
+.profile-hero-name {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 0.1em;
+  color: #ff2200;
+  line-height: 1;
+  text-shadow: 0 0 60px rgba(255, 34, 0, 0.35), 0 0 20px rgba(255, 34, 0, 0.2);
+}
+
+.profile-hero-tagline {
+  display: block;
+  font-size: clamp(0.62rem, 1.4vw, 0.75rem);
+  color: rgba(127, 255, 127, 0.6);
+  letter-spacing: 0.25em;
+  margin-top: 0.4rem;
+  text-transform: uppercase;
+}
+
+.profile-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.profile-hero-meta-item {
+  font-size: 0.68rem;
+  color: rgba(255, 34, 0, 0.65);
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.profile-hero-meta-item::before {
+  content: '▸';
+  color: rgba(255, 34, 0, 0.4);
+}
+
+/* ── Main content area ── */
+.profile-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 5rem;
+}
+
+@media (max-width: 768px) {
+  .profile-header    { padding: 0.75rem 1.25rem; }
+  .profile-hero-card { margin: 1.5rem 1.25rem 0; padding: 1.2rem 1.25rem; }
+  .profile-main      { padding: 1.5rem 1.25rem 4rem; }
+}
+
+/* ── Section ── */
+.pf-section {
+  margin-bottom: 3rem;
+}
+
+.pf-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+}
+
+.pf-section-index {
+  font-size: 0.65rem;
+  color: rgba(255, 34, 0, 0.45);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.pf-section-title {
+  font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  color: #df432d;
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(223, 67, 45, 0.24);
+}
+
+.pf-title-cursor {
+  display: inline-block;
+  color: rgba(223, 67, 45, 0.8);
+  margin-left: 0.18em;
+  animation: title-cursor-blink 0.7s steps(1, end) infinite;
+}
+
+@keyframes title-cursor-blink {
+  0%, 45% { opacity: 1; }
+  46%, 100% { opacity: 0; }
+}
+
+.pf-section-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 34, 0, 0.35) 0%, transparent 100%);
+}
+
+/* ── Body text ── */
+.pf-body {
+  font-size: clamp(0.78rem, 1.5vw, 0.88rem);
+  line-height: 1.85;
+  color: rgba(127, 255, 127, 0.78);
+  white-space: pre-line;
+  font-weight: 300;
+}
+
+/* ── Skills / Tech Stack ── */
+.pf-skill-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.pf-skill-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.5rem 0.75rem;
+  border-left: 2px solid rgba(255, 34, 0, 0.25);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pf-skill-row:hover {
+  border-left-color: rgba(255, 34, 0, 0.55);
+  background: rgba(255, 34, 0, 0.03);
+}
+
+@media (max-width: 640px) {
+  .pf-skill-row { grid-template-columns: 1fr; gap: 0.2rem; }
+}
+
+.pf-skill-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: rgba(255, 34, 0, 0.7);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.pf-skill-items {
+  font-size: clamp(0.72rem, 1.35vw, 0.82rem);
+  color: rgba(127, 255, 127, 0.72);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* ── Shared list container ── */
+.pf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Experience / Education cards ── */
+.pf-exp-item {
+  border-left: 2px solid rgba(255, 34, 0, 0.35);
+  padding: 0.6rem 0 0.6rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.pf-exp-item::before {
+  content: '';
+  position: absolute;
+  left: -2px; top: 0; bottom: 0;
+  width: 2px;
+  background: rgba(255, 34, 0, 0);
+  transition: background 0.2s;
+  box-shadow: 0 0 0 rgba(255, 34, 0, 0);
+}
+
+.pf-exp-item:hover {
+  border-left-color: rgba(255, 34, 0, 0.65);
+}
+
+.pf-exp-item:hover::before {
+  background: rgba(255, 34, 0, 0.65);
+  box-shadow: 0 0 12px rgba(255, 34, 0, 0.5);
+}
+
+.pf-exp-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pf-exp-role {
+  font-size: clamp(0.78rem, 1.5vw, 0.9rem);
+  font-weight: 600;
+  color: #c8ffc8;
+  letter-spacing: 0.04em;
+}
+
+.pf-exp-period {
+  font-size: 0.65rem;
+  color: rgba(255, 34, 0, 0.55);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.pf-exp-company {
+  font-size: 0.72rem;
+  color: rgba(255, 34, 0, 0.6);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.pf-exp-points {
+  margin-top: 0.5rem;
+  padding-left: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.pf-exp-points li {
+  font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+  color: rgba(127, 255, 127, 0.68);
+  font-weight: 300;
+  line-height: 1.75;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.pf-exp-points li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: rgba(255, 34, 0, 0.45);
+}
+
+/* ── Education degree cards ── */
+.pf-degree-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .pf-degree-grid { grid-template-columns: 1fr; }
+}
+
+.pf-degree-card {
+  border: 1px solid rgba(255, 34, 0, 0.18);
+  background: rgba(255, 34, 0, 0.025);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.pf-degree-card:hover {
+  border-color: rgba(255, 34, 0, 0.38);
+  box-shadow: 0 0 20px rgba(255, 34, 0, 0.07);
+}
+
+.pf-degree-name {
+  font-size: clamp(0.72rem, 1.4vw, 0.85rem);
+  font-weight: 600;
+  color: #c8ffc8;
+  letter-spacing: 0.04em;
+}
+
+.pf-degree-school {
+  font-size: 0.68rem;
+  color: #cf897e;
+  letter-spacing: 0.06em;
+}
+
+.pf-degree-period {
+  font-size: 0.63rem;
+  color: #c4867d;
+  letter-spacing: 0.1em;
+}
+
+.pf-degree-courses-label {
+  font-size: 0.62rem;
+  color: rgba(127, 255, 127, 0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+.pf-degree-courses {
+  font-size: 0.68rem;
+  color: rgba(127, 255, 127, 0.6);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* ── Projects ── */
+.pf-projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .pf-projects-grid { grid-template-columns: 1fr; }
+}
+
+.pf-project-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(255, 34, 0, 0.18);
+  background: rgba(255, 34, 0, 0.02);
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.pf-project-item::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 34, 0, 0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.pf-project-item:hover {
+  border-color: rgba(255, 34, 0, 0.38);
+  background: rgba(255, 34, 0, 0.04);
+  box-shadow: 0 0 24px rgba(255, 34, 0, 0.08);
+}
+
+.pf-project-item:hover::after { opacity: 1; }
+
+.pf-project-name {
+  font-size: clamp(0.72rem, 1.4vw, 0.85rem);
+  font-weight: 600;
+  color: #ff2200;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 12px rgba(255, 34, 0, 0.3);
+}
+
+.pf-project-achievement {
+  font-size: 0.65rem;
+  color: rgba(127, 255, 127, 0.55);
+  letter-spacing: 0.08em;
+  font-style: italic;
+}
+
+.pf-project-desc {
+  font-size: clamp(0.68rem, 1.3vw, 0.78rem);
+  color: rgba(127, 255, 127, 0.65);
+  font-weight: 300;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.pf-project-stack {
+  font-size: 0.62rem;
+  color: rgba(255, 34, 0, 0.5);
+  letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+/* ── Patent ── */
+.pf-patent-card {
+  border: 1px solid rgba(255, 34, 0, 0.22);
+  background: rgba(255, 34, 0, 0.03);
+  padding: 1.2rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pf-patent-card::before {
+  content: 'PATENT PENDING';
+  position: absolute;
+  top: 0.7rem; right: 1rem;
+  font-size: 0.55rem;
+  color: rgba(255, 34, 0, 0.4);
+  letter-spacing: 0.2em;
+  border: 1px solid rgba(255, 34, 0, 0.25);
+  padding: 0.15rem 0.5rem;
+}
+
+.pf-patent-title {
+  display: block;
+  font-size: clamp(0.76rem, 1.4vw, 0.88rem);
+  font-weight: 600;
+  color: #c8ffc8;
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+  padding-right: 8rem;
+}
+
+.pf-patent-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pf-patent-meta-row {
+  font-size: 0.65rem;
+  color: rgba(127, 255, 127, 0.55);
+  letter-spacing: 0.06em;
+}
+
+.pf-patent-meta-row span {
+  color: rgba(255, 34, 0, 0.55);
+  margin-right: 0.5rem;
+}
+
+/* ── Publications ── */
+.pf-pub-card {
+  border: 1px solid rgba(255, 34, 0, 0.2);
+  background: rgba(255, 34, 0, 0.025);
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pf-pub-title {
+  font-size: clamp(0.76rem, 1.4vw, 0.88rem);
+  font-weight: 600;
+  color: #c8ffc8;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.pf-pub-authors {
+  font-size: 0.67rem;
+  color: rgba(127, 255, 127, 0.58);
+  line-height: 1.5;
+}
+
+.pf-pub-authors strong {
+  color: rgba(255, 34, 0, 0.75);
+  font-weight: 600;
+}
+
+.pf-pub-venue {
+  font-size: 0.65rem;
+  color: rgba(255, 34, 0, 0.55);
+  letter-spacing: 0.06em;
+}
+
+.pf-pub-status {
+  display: inline-block;
+  font-size: 0.58rem;
+  color: rgba(127, 255, 127, 0.6);
+  border: 1px solid rgba(127, 255, 127, 0.2);
+  padding: 0.15rem 0.6rem;
+  letter-spacing: 0.12em;
+  margin-top: 0.2rem;
+}
+
+/* ── Certifications ── */
+.pf-cert-item {
+  display: grid;
+  grid-template-columns: 1.2rem 1fr auto;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.4rem 0.6rem;
+  border-left: 2px solid rgba(255, 34, 0, 0.2);
+  transition: border-color 0.2s;
+}
+
+.pf-cert-item:hover {
+  border-left-color: rgba(255, 34, 0, 0.5);
+}
+
+.pf-cert-bullet {
+  color: #ff2200;
+  font-size: 0.75rem;
+}
+
+.pf-cert-name {
+  font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+  color: rgba(127, 255, 127, 0.75);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.pf-cert-year {
+  font-size: 0.63rem;
+  color: rgba(255, 34, 0, 0.5);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* ── Blog ── */
+.pf-blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.pf-blog-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 34, 0, 0.12);
+  background: rgba(255, 34, 0, 0.015);
+  text-decoration: none;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+
+.pf-blog-item:hover {
+  border-color: rgba(255, 34, 0, 0.32);
+  background: rgba(255, 34, 0, 0.04);
+  box-shadow: 0 0 16px rgba(255, 34, 0, 0.06);
+}
+
+.pf-blog-title {
+  font-size: clamp(0.74rem, 1.4vw, 0.86rem);
+  font-weight: 500;
+  color: #c8ffc8;
+  line-height: 1.4;
+}
+
+.pf-blog-desc {
+  font-size: 0.67rem;
+  color: rgba(127, 255, 127, 0.5);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.pf-blog-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.15rem;
+}
+
+.pf-blog-date {
+  font-size: 0.6rem;
+  color: rgba(255, 34, 0, 0.45);
+  letter-spacing: 0.1em;
+}
+
+.pf-blog-platform {
+  font-size: 0.6rem;
+  color: rgba(127, 255, 127, 0.35);
+  letter-spacing: 0.1em;
+}
+
+/* ── Education note ── */
+.pf-edu-note {
+  font-size: 0.68rem;
+  color: rgba(255, 34, 0, 0.42);
+  letter-spacing: 0.06em;
+  margin-top: 0.1rem;
+}
+
+/* ── Open Source (kept from original) ── */
+.pf-oss-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem 0 0.5rem 1.2rem;
+  border-left: 2px solid rgba(255, 34, 0, 0.22);
+}
+
+.pf-oss-header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.pf-oss-repo {
+  font-size: clamp(0.72rem, 1.35vw, 0.82rem);
+  font-weight: 500;
+  color: #ff2200;
+  letter-spacing: 0.04em;
+}
+
+.pf-oss-stars {
+  font-size: 0.63rem;
+  color: rgba(127, 255, 127, 0.45);
+  letter-spacing: 0.08em;
+}
+
+.pf-oss-desc {
+  font-size: clamp(0.68rem, 1.3vw, 0.78rem);
+  color: rgba(127, 255, 127, 0.65);
+  font-weight: 300;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Contact ── */
+.pf-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+@media (max-width: 600px) {
+  .pf-contact-grid { grid-template-columns: 1fr; }
+}
+
+.pf-contact-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 34, 0, 0.1);
+  background: rgba(255, 34, 0, 0.015);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pf-contact-row:hover {
+  border-color: rgba(255, 34, 0, 0.28);
+  background: rgba(255, 34, 0, 0.03);
+}
+
+.pf-contact-label {
+  font-size: 0.65rem;
+  color: rgba(255, 34, 0, 0.6);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 6rem;
+}
+
+.pf-contact-link {
+  font-size: clamp(0.68rem, 1.3vw, 0.78rem);
+  color: rgba(127, 255, 127, 0.75);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pf-contact-link:hover {
+  color: #7fff7f;
+  border-bottom-color: rgba(127, 255, 127, 0.35);
+}
+
+/* ── Footer ── */
+.profile-footer {
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 34, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pf-footer-eof {
+  font-size: 0.62rem;
+  color: rgba(255, 34, 0, 0.3);
+  letter-spacing: 0.18em;
+}
+
+.profile-footer-link {
+  font-size: 0.65rem;
+  color: rgba(127, 255, 127, 0.45);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.profile-footer-link:hover {
+  color: #7fff7f;
+  border-bottom-color: rgba(127, 255, 127, 0.35);
+}
+
+/* ── Talks ── */
+.pf-talk-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.75rem;
+  border-left: 2px solid rgba(255, 34, 0, 0.2);
+}
+
+.pf-talk-type {
+  font-size: 0.62rem;
+  color: rgba(255, 34, 0, 0.55);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.pf-talk-title {
+  font-size: clamp(0.7rem, 1.35vw, 0.8rem);
+  color: rgba(127, 255, 127, 0.72);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
